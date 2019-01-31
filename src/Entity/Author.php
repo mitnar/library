@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AuthorRepository")
- * @UniqueEntity(
+ * @UniqueEntity(con
  *     fields={"firstName", "secondName", "patronymic"},
  *     message="Такой автор уже существует."
  * )
@@ -39,6 +39,11 @@ class Author
      * @Assert\NotBlank
      */
     private $patronymic;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Book", inversedBy="authors")
+     */
+    private $book;
 
     public function getId(): ?int
     {
@@ -86,5 +91,17 @@ class Author
         return $this->secondName .
             mb_substr($this->firstName, 0, 1) .
             mb_substr($this->patronymic, 0, 1);
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): self
+    {
+        $this->book = $book;
+
+        return $this;
     }
 }
